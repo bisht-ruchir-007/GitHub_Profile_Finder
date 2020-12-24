@@ -1,18 +1,28 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export class Search extends Component {
 	state = {
 		username: ''
 	};
 
+	static propTypes = {
+		searchUsers: PropTypes.func.isRequired,
+		clearUsers: PropTypes.func.isRequired,
+		showClear: PropTypes.bool.isRequired
+	};
+
 	onSubmit = (e) => {
 		e.preventDefault();
-		console.log(this.state.username);
+		this.props.searchUsers(this.state.username);
+		this.setState({ username: '' });
+		//console.log(this.state.username);
 	};
 
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
 	render() {
+		const { showClear, clearUsers } = this.props;
 		return (
 			<div>
 				<form className='form' onSubmit={this.onSubmit}>
@@ -20,11 +30,16 @@ export class Search extends Component {
 						type='text'
 						name='username'
 						placeholder='Enter username '
-						value={this.state.text}
+						value={this.state.username}
 						onChange={this.onChange}
 					/>
 					<input type='submit' value='Search' className='btn btn-primary btn-block' />
 				</form>
+				{showClear && (
+					<button className='btn btn-dark btn-block' onClick={clearUsers}>
+						Clear
+					</button>
+				)}
 			</div>
 		);
 	}

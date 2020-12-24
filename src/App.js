@@ -12,17 +12,35 @@ class App extends Component {
 	};
 
 	// lifecycle methods - render() , componentDidMount() etc...
-	async componentDidMount() {
-		this.setState({ loading: true });
-		// fetching the data from GITHUB - API
+	// async componentDidMount() {
+	// 	this.setState({ loading: true });
+	// 	// fetching the data from GITHUB - API
+	// 	const res = await axios.get(
+	// 		`https://api.github.com/users?
+	// 		 client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}
+	// 		 &client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+	// 	);
+	// 	// target / response data ----- res.data
+	// 	this.setState({ users: res.data, loading: false });
+	// 	//console.log(res.data);
+	// }
+
+	// Search Github Users
+	searchUsers = async (username) => {
+		this.setState({ users: [], loading: true });
 		const res = await axios.get(
-			`https://api.github.com/users?
-			 client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}
-			 &client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+			`https://api.github.com/search/users?q=${username}&client_id=${process.env
+				.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
 		);
-		this.setState({ users: res.data, loading: false });
-		//console.log(res.data);
-	}
+		// target / response data ---- res.data.items
+		console.log(res.data.items);
+		this.setState({ users: res.data.items, loading: false });
+	};
+
+	// clearUsers function
+	clearUsers = () => {
+		this.setState({ users: [], loading: false });
+	};
 
 	render() {
 		const { loading, users } = this.state;
@@ -30,7 +48,11 @@ class App extends Component {
 			<div className='App'>
 				<Navbar />
 				<div className='container'>
-					<Search />
+					<Search
+						searchUsers={this.searchUsers}
+						clearUsers={this.clearUsers}
+						showClear={users.length > 0 ? true : false}
+					/>
 					<Users loading={loading} users={users} />
 				</div>
 			</div>
