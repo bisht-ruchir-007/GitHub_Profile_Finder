@@ -17,7 +17,8 @@ class App extends Component {
 		user: {},
 		repos: [],
 		loading: false,
-		alert: null
+		alert: null,
+		searchText: ''
 	};
 
 	// lifecycle methods - render() , componentDidMount() etc...
@@ -36,7 +37,7 @@ class App extends Component {
 
 	// Search Github Users
 	searchUsers = async (username) => {
-		this.setState({ users: [], loading: true, alert: null });
+		this.setState({ users: [], loading: true, alert: null, searchText: username });
 		const res = await axios.get(
 			`https://api.github.com/search/users?q=${username}&client_id=${process.env
 				.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
@@ -82,7 +83,7 @@ class App extends Component {
 	};
 
 	render() {
-		const { loading, users, user, repos } = this.state;
+		const { loading, users, user, repos, searchText } = this.state;
 		return (
 			<Router>
 				<div className='App'>
@@ -102,7 +103,7 @@ class App extends Component {
 											sendAlert={this.sendAlert}
 											showClear={users.length > 0 ? true : false}
 										/>
-										<Users loading={loading} users={users} />
+										<Users loading={loading} users={users} searchText={searchText} />
 									</Fragment>
 								)}
 							/>
