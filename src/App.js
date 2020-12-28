@@ -6,12 +6,16 @@ import Users from './components/users/Users';
 import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
 import About from './components/pages/About';
+import User from './components/users/User';
+
 import axios from 'axios';
 
 //class based component
 class App extends Component {
 	state = {
 		users: [],
+		user: {},
+		repos: [],
 		loading: false,
 		alert: null
 	};
@@ -42,6 +46,30 @@ class App extends Component {
 		this.setState({ users: res.data.items, loading: false, alert: null });
 	};
 
+	// get profile of single/particular user
+	getUserProfile = async (username) => {
+		this.setState({ loading: true, alert: null });
+
+		const res = await axios.get(
+			`https://api.github.com/users/${username}?client_id=${process.env
+				.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+		);
+
+		this.setState({ user: res.data, loading: false });
+	};
+
+	// get user Repos
+	getuserRepos = async (username) => {
+		this.setState({ loading: true, alert: null });
+
+		const res = await axios.get(
+			`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env
+				.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+		);
+
+		this.setState({ repos: res.data, loading: false });
+	};
+
 	// clearUsers function
 	clearUsers = () => {
 		this.setState({ users: [], loading: false, alert: null });
@@ -54,7 +82,7 @@ class App extends Component {
 	};
 
 	render() {
-		const { loading, users } = this.state;
+		const { loading, users, user, repos } = this.state;
 		return (
 			<Router>
 				<div className='App'>
@@ -85,6 +113,23 @@ class App extends Component {
 								render={(props) => (
 									<Fragment>
 										<About />
+									</Fragment>
+								)}
+							/>
+							{/* User Route */}
+							<Route
+								exact
+								path='/user/:login'
+								render={(props) => (
+									<Fragment>
+										<User
+											{...props}
+											getUserProfile={this.getUserProfile}
+											getUserRepos={this.getuserRepos}
+											user={user}
+											repos={repos}
+											loading={loading}
+										/>
 									</Fragment>
 								)}
 							/>
