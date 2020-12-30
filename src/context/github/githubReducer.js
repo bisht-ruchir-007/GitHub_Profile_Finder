@@ -1,11 +1,13 @@
 import { SEARCH_USERS, SET_LOADING, CLEAR_USERS, GET_USER, GET_REPOS } from '../types';
 
 export default (state, action) => {
+	console.log(state);
 	switch (action.type) {
 		case SEARCH_USERS:
 			return {
 				...state,
-				users: action.payload,
+				users: action.payload.usersData,
+				searchText: action.payload.username,
 				loading: false
 			};
 		case GET_USER:
@@ -24,6 +26,7 @@ export default (state, action) => {
 			return {
 				...state,
 				users: [],
+				searchText: '',
 				loading: false
 			};
 		case SET_LOADING:

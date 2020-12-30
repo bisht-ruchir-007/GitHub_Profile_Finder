@@ -10,9 +10,8 @@ import User from './components/users/User';
 
 import GithubState from './context/github/GithubState';
 import AlertState from './context/alert/AlertState';
-//functional Component
+
 const App = () => {
-	// const [ searchText, setSearchText ] = useState('');
 	return (
 		<GithubState>
 			<AlertState>
