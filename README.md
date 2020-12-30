@@ -2,9 +2,7 @@
 
 Github Profile Finder interface using React Hooks and Context api.
 
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project URL : https://github-profile-finder-007.netlify.app
 
 ## Available Scripts
 
